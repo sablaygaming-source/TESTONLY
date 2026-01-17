@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Sign Up</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            justify-content: center;
+            padding: 50px;
+        }
+
+        .form-container {
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 8px;
+            width: 300px;
+        }
+
+        input {
+            width: 100%;
+            margin: 10px 0;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .submit-btn {
+            background: green;
+            color: white;
+            border: none;
+            cursor: pointer;
+            flex: 2;
+        }
+
+        .cancel-btn {
+            background: red;
+            color: white;
+            border: none;
+            cursor: pointer;
+            flex: 1;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="form-container">
+        <h3>Sign Up</h3>
+        <form id="signupForm">
+            <input type="text" id="username" placeholder="Username" required>
+            <input type="text" id="fullname" placeholder="Full Name" required>
+            <input type="email" id="email" placeholder="Email Address" required>
+
+            <div class="buttons">
+                <button type="button" class="submit-btn" onclick="sendData()">Submit</button>
+                <button type="button" class="cancel-btn" onclick="clearForm()">Cancel</button>
+            </div>
+        </form>
+        <p id="responseMsg"></p>
+    </div>
+
+    <script>
+
+        // Change this line for local testing
+        //#const API_URL = "http://127.0.0.1:8000/signup";
+
+        //const API_URL = "https://your-render-app-url.onrender.com/signup";
+
+        // Replace this line in your <script> tag
+        //const API_URL = window.location.origin + "/signup";
+
+        const API_URL = window.location.origin + "/signup";
+
+        async function sendData() {
+            const payload = {
+                username: document.getElementById('username').value,
+                fullname: document.getElementById('fullname').value,
+                email: document.getElementById('email').value
+            };
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+                const result = await response.json();
+                document.getElementById('responseMsg').innerText = "Status " + result.status + "save is " + result.user.sender_name + " others " + result.user.data.id
+
+                // + " <BR>sender name " + result.user.fullname;
+
+            } catch (error) {
+                document.getElementById('responseMsg').innerText = "Error saving data.";
+            }
+        }
+
+        function clearForm() {
+            document.getElementById('signupForm').reset();
+            document.getElementById('responseMsg').innerText = "";
+        }
+    </script>
+
+</body>
+
+</html>
