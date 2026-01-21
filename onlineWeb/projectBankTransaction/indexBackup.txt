@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple DB Example</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 30px;
+        }
+
+        /* Basic styling to make it readable */
+        form {
+            background: #f4f4f4;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        input {
+            display: block;
+            margin-bottom: 10px;
+            padding: 8px;
+            width: 300px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* Separate style for the Refresh button for clarity */
+        #refreshButtonEl {
+            background: #007bff;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #333;
+            color: white;
+        }
+
+
+
+        #studentForm {
+            display: flex;
+            /* This makes the items sit side-by-side */
+            flex-direction: row;
+            /* Horizontal layout */
+            align-items: center;
+            /* Keeps everything aligned in the middle vertically */
+            gap: 10px;
+            /* Adds space between the inputs */
+            width: 100%;
+            /* Makes the form span the full screen width */
+            flex-wrap: wrap;
+            /* Allows items to move to a second line if the screen is tiny */
+            padding: 20px;
+        }
+
+        #studentForm input {
+            flex: 1;
+            /* This makes each input grow to fill available space evenly */
+            min-width: 150px;
+            /* Prevents inputs from getting too squashed */
+            padding: 8px;
+        }
+
+        #studentForm h3 {
+            width: 100%;
+            /* Keeps the title on its own line above the horizontal inputs */
+            margin-bottom: 10px;
+        }
+
+        button {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 8px 15px;
+            cursor: pointer;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <h1>Student Registration</h1>
+
+    <form id="studentForm">
+        <h3>Add New Student</h3>
+        <input type="text" id="BankTransaction" placeholder="Bank Transaction" required>
+        <input type="text" id="AcountId" placeholder="Acount Id" required>
+        <input type="text" id="Code" placeholder="Code" required>
+        <input type="text" id="BankName" placeholder="Bank Name" required>
+        <input type="text" id="Type" placeholder="Type" required>
+        <input type="text" id="Date" placeholder="Date" required>
+        <input type="text" id="ContactName" placeholder="ContactName" required>
+        <input type="text" id="ContactNo" placeholder="Contact No" required>
+        <input type="text" id="Currency" placeholder="Currency" required>
+        <input type="text" id="Status" placeholder="Status" required>
+        <button type="submit">Save to Database</button>
+
+    </form>
+
+    <!-- Changed type to 'button' and added ID to the button element -->
+    <form id="refreshForm">
+        <button type="button" id="refreshButtonEl">REFRESH</button>
+    </form>
+    <form id="displayText">
+        <h1 type="label" id="display2">WAITING FOR SERVER</h1>
+    </form>
+    <h3>Database Records:</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Bank Transaction</th>
+                <th>Acount Id</th>
+                <th>Code</th>
+                <th>Bank Name</th>
+                <th>Type</th>
+                <th>Date</th>
+                <th>Contact Name</th>
+                <th>Contact No</th>
+                <th>Currency</th>
+                <th>Status</th>
+
+            </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+    </table>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
