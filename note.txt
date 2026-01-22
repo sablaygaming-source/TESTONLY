@@ -25,6 +25,70 @@ mainIndex = ["BankTransaction","AccountId", "Code", "BankName" ,
             "Status"]
 
 
+
+
+
+
+######################################33
+
+from flask import Flask, jsonify
+from threading import Thread, Lock
+import time
+
+app = Flask(__name__)
+
+timer_data = {'time': 0, 'running': False}
+timer_lock = Lock()
+
+def run_timer():
+    while True:
+        with timer_lock:
+            if timer_data['running']:
+                timer_data['time'] += 1
+        time.sleep(1)
+
+# Start background thread
+timer_thread = Thread(target=run_timer, daemon=True)
+timer_thread.start()
+
+@app.route('/api/timer/start', methods=['POST'])
+def start_timer():
+    with timer_lock:
+        timer_data['running'] = True
+    return jsonify({'status': 'started'})
+
+@app.route('/api/timer/stop', methods=['POST'])
+def stop_timer():
+    with timer_lock:
+        timer_data['running'] = False
+    return jsonify({'status': 'stopped'})
+
+@app.route('/api/timer', methods=['GET'])
+def get_timer():
+    with timer_lock:
+        return jsonify(timer_data)
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+
+
+
+async function pollTimer() {
+    setInterval(async () => {
+        const response = await fetch('/api/timer');
+        const data = await response.json();
+        document.getElementById('timer').textContent = data.time;
+    }, 1000);
+}
+
+pollTimer();
+
+
+
+
+
+#############################################
 use by java script
 You will see a red traceback like:
 

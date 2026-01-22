@@ -3,7 +3,7 @@ import os
 import uuid
 import requests
 from datetime import datetime, timezone, timedelta
-
+from threading import Thread, Lock
 from flask import Flask, request, jsonify, send_from_directory, render_template
 from flask_cors import CORS
 
@@ -29,6 +29,11 @@ headers = {
     "Content-Type": "application/json"
 }
 
+#setup of timer
+timer_data = {'time': 0, 'running': False}
+timer_lock = Lock()
+
+
 def fGetJson():#2
     global mainIndex
     global mainData
@@ -43,15 +48,30 @@ def fGetJson():#2
         #4       
     #5
     if not mainData: #10
+        
         mainId = 1
     else: #10
 
-        mainId = mainData[len(mainData)]["AccountId"]
+        print(f"\ndebug fGetJson false {len(mainData)=}")
+        mainLen = len(mainData)        
+        mainId = mainData[mainLen -1 ]["AccountId"]
+        mainId = fStrToNum(mainId)
     #10
 
     return mainData
 #2
 
+#convert string to number
+def fStrToNum(pNum):#2
+
+    try :#3
+        n = int(pNum)
+    except ValueError as e1 :#3
+        print(f"\n\ndebug not a valid number the {pNum}")
+        n= 0
+    #3
+    return n
+#2
 def save_to_json(): #2
     global mainData
 
@@ -67,6 +87,7 @@ def index():#2
     return render_template("index.html")    
 #2
 
+#use in initial and refresh client
 @app.route('/api/BankTransaction', methods=['GET'])
 def fBankTransaction(): #2
     
@@ -79,7 +100,7 @@ def fBankTransaction(): #2
         return jsonify({"status": "success", "user": mainData}), 201
             
     except Exception as e: #3
-        print(f"\n\ndebug fBankTransaction inside exception e \n\n") 
+        print(f"\n\ndebug fBankTransaction inside exception e {e=}\n\n") 
         return jsonify({
             "status": False,
             "error": {
@@ -94,16 +115,25 @@ def fBankTransaction(): #2
     #return jsonify({"status": "success", "user": mainData}), 201
 #2
 
+#came from submit button client
 @app.route('/api/BankTransaction', methods=['POST'])
 def fBankTransactionPost(): #2
     try: #3
-        
+        global mainData
+        global mainLen
+        global mainId
+
         #global mainLen
         print(f"\n\ndebug loading fBankTransactionPost ")
         vData = request.json
         
         #disabled id creator, i will create my own using mainIndex
         #vData["AccountId"] = str(uuid.uuid4())[:8]
+        
+        #updates the mainId
+        mainId +=1
+        #now save id and date
+        vData["AccountId"] = str(mainId)        
         ph_time = datetime.now(timezone.utc) + timedelta(hours=8)
         vData["Date"] = ph_time.strftime("%Y-%m-%d %H:%M:%S")
         
@@ -128,7 +158,30 @@ def fBankTransactionPost(): #2
     #3   
 #2
 
-if __name__ == "__main__":
+
+def run_timer():
+    while True:
+        with timer_lock:
+            if timer_data['running']:
+                timer_data['time'] += 1
+        time.sleep(1)
+
+
+def run_timer():
+    while True:
+        with timer_lock:
+            if timer_data['running']:
+                timer_data['time'] += 1
+        time.sleep(1)
+
+
+# Start background thread
+timer_thread = Thread(target=run_timer, daemon=True)
+timer_thread.start()
+
+if __name__ == "__main__": #3
     print(f"\n\n##################\ndebug RSM program is starting")
+    
     app.run(debug=True)
     print(f"\n\n##################\ndebug RSM EXITING PROGRAM....")
+#3

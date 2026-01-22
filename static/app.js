@@ -2,6 +2,9 @@
 const form = document.getElementById('studentForm');
 const tableBody = document.getElementById('tableBody');
 
+const refreshButton1 = document.getElementById('refreshForm')
+
+
 // =================================================
 // FUNCTION 1: Load data from the backend and display it
 // =================================================
@@ -13,14 +16,10 @@ async function loadTableData() {
         // Convert the response JSON ainto a JavaScript Array
         const vData = await response.json();
 
-
         console.log("debug response " + response.ok)
-        console.error("debug response.status" + response.status)
-        console.error("debug response " + response)
+        console.log("debug response.status" + response.status)
+        console.log("debug response " + response)
         console.dir(response)
-        console.error("debug response.hint " + response.error.hint)
-
-
 
         // Clear existing table rows
         tableBody.innerHTML = '';
@@ -106,8 +105,24 @@ form.addEventListener('submit', async function (event) {
 });
 
 
+refreshButton1.addEventListener('click', async function (event) {
+    console.log("debug freshButton1.addEvernListerner")
+    loadTableData();
+
+})
+
+async function pollTimer() {
+    setInterval(async () => {
+        const response = await fetch('/api/timer');
+        const data = await response.json();
+        document.getElementById('timer').textContent = data.time;
+    }, 1000);
+}
+
+pollTimer();
+
 // Load the table data as soon as the page opens (will likely show "No records loaded" 
 // until the user clicks the REFRESH button to load server memory).
-loadTableData();
+//loadTableData();
 
 console.log("\nbefore io in app.js ");
