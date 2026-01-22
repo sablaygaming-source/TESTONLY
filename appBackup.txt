@@ -1,0 +1,148 @@
+// Grab references to HTML elements we need to interact with
+const form = document.getElementById('studentForm');
+const tableBody = document.getElementById('tableBody');
+// Reference the new ID for the button element
+const refreshButtonEl = document.getElementById('refreshButtonEl');
+
+const display2 = document.getElementById('display2');
+let gCount = 0;
+// =================================================
+// FUNCTION 1: Load data from the backend and display it
+// =================================================
+async function loadTableData() {
+    console.log("Attempting to load data from /api/students...");
+    try {
+        // Ask the backend for the data (GET request)
+        const response = await fetch('/api/students');
+        // Convert the response JSON ainto a JavaScript Array
+        const data = await response.json();
+
+        // Clear existing table rows
+        tableBody.innerHTML = '';
+
+        // Loop through each student in the database array
+        if (data.length === 0) {
+            tableBody.innerHTML = '<tr><td colspan="6">No records loaded. Please click REFRESH.</td></tr>';
+        }
+
+        data.forEach(student => {
+            // Create a new table row HTML string
+            const row = `
+                <tr>
+                    <td>${student.id}</td>
+                    <td>${student.date}</td>
+                    <td>${student.fullName}</td>
+                    <td>${student.Address}</td>
+                    <td>${student.course}</td>
+                    <td>${student.Email}</td>
+                </tr>
+            `;
+            // Add the new row to the table body
+            tableBody.innerHTML += row;
+        });
+    } catch (error) {
+        console.error("Error loading data:", error);
+    }
+}
+
+// =================================================
+// FUNCTION 2: Handle Form Submission (Add Student)
+// =================================================
+form.addEventListener('submit', async function (event) {
+
+    console.log("\nDebug: Submitting new student data.");
+    // Prevent the default browser behavior of reloading the page
+    event.preventDefault();
+
+    // 1. Get data from the HTML input boxes
+    const formData = {
+        fullName: document.getElementById('fullNameInput').value,
+        Address: document.getElementById('addressInput').value,
+        course: document.getElementById('courseInput').value,
+        Email: document.getElementById('emailInput').value
+    };
+
+    try {
+        // 2. Send data to the backend (POST request)
+        const response = await fetch('/api/students', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            // Convert JS object to JSON string to send over the network
+            body: JSON.stringify(formData)
+        });
+
+        if (!response.ok) {
+            throw new Error(`Server returned status: ${response.status}`);
+        }
+
+        // 3. Clear the form inputs
+        form.reset();
+
+        // 4. Reload the table to show the new data
+        loadTableData();
+
+    } catch (error) {
+        console.error("Error saving data:", error);
+    }
+});
+
+// =================================================
+// FUNCTION 3: Handle Refresh Button Click
+// =================================================
+// Listen for the 'click' event on the new button element
+refreshButtonEl.addEventListener('click', async function () {
+    console.log("\nDebug: Refresh button clicked. Posting to server to load CSV...");
+
+    try {
+        // 1. Send POST request to tell the server to load data from student.csv
+        const response = await fetch('/api/refreshBut', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            // **CORRECT PAYLOAD:** The server expects an object {bRefresh: true}
+            body: JSON.stringify({ bRefresh: true })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            console.error(`Refresh failed: ${result.message}`);
+            throw new Error(result.message || "Server refresh failed.");
+        }
+
+        console.log(`Server response: ${result.message} Loaded ${result.count} records.`);
+
+        // 2. Once the server confirms the data is loaded,
+        //    call loadTableData to GET the data and display it in the table.
+        await loadTableData();
+
+    } catch (error) {
+        console.error("Error during refresh operation:", error);
+    }
+});
+
+// Automatically update the display every 5 seconds
+setInterval(async () => {
+    try {
+        const response = await fetch('/api/display');
+        const data = await response.json();
+
+        // Display just the date string from the JSON
+        display2.innerText = data.date;
+
+        console.log("gCount: ", gCount);
+        gCount += 1;
+    } catch (err) {
+        console.error("Failed to fetch:", err);
+    }
+}, 2000);
+
+
+// Load the table data as soon as the page opens (will likely show "No records loaded" 
+// until the user clicks the REFRESH button to load server memory).
+loadTableData();
+
+console.log("\nbefore io in app.js ");

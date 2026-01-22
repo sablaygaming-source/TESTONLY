@@ -1,0 +1,26 @@
+[
+    {
+        "BankTransaction": "a",
+        "AccountId": "942a9f49",
+        "Code": "a",
+        "BankName": "a",
+        "Type": "a",
+        "Date": "2026-01-21 20:57:17",
+        "ContactName": "a",
+        "ContactNo": "a",
+        "Currency": "a",
+        "Status": "a"
+    },
+    {
+        "BankTransaction": "andoTransact",
+        "AccountId": "920b4df3",
+        "Code": "andoCode",
+        "BankName": "andoBank",
+        "Type": "andoType",
+        "Date": "2026-01-21 21:00:32",
+        "ContactName": "andoContanctName",
+        "ContactNo": "andoContactNo",
+        "Currency": "andoCurrency",
+        "Status": "andoStatus"
+    }
+]
