@@ -8,18 +8,25 @@ const refreshButton1 = document.getElementById('refreshForm')
 // =================================================
 // FUNCTION 1: Load data from the backend and display it
 // =================================================
-async function loadTableData() {
+//parameter bInit = True for initial load, Otherwise False not initial
+async function loadTableData(bInit) {
     console.log("Attempting to load data from /api/BankTransaction...");
     try {
-        // Ask the backend for the data (GET request)
-        const response = await fetch('/api/BankTransaction');
-        // Convert the response JSON ainto a JavaScript Array
-        const vData = await response.json();
+        let response
+        if (bInit) {
+            // Ask the backend for the data (GET request)
+            response = await fetch('/api/BankTransaction');
+            // Convert the response JSON ainto a JavaScript Array
 
-        console.log("debug response " + response.ok)
-        console.log("debug response.status" + response.status)
-        console.log("debug response " + response)
-        console.dir(response)
+            console.log("debug response " + response.ok)
+            console.log("debug response.status" + response.status)
+            console.log("debug response " + response)
+            console.dir(response)
+        } else {
+            response = await fetch('/kabisoteako/me')
+
+        }
+        const vData = await response.json()
 
         // Clear existing table rows
         tableBody.innerHTML = '';
@@ -107,22 +114,32 @@ form.addEventListener('submit', async function (event) {
 
 refreshButton1.addEventListener('click', async function (event) {
     console.log("debug freshButton1.addEvernListerner")
-    loadTableData();
+    loadTableData(bInit = false);
 
 })
 
+//timer to show on screen
 async function pollTimer() {
     setInterval(async () => {
-        const response = await fetch('/api/timer');
+        const response = await fetch('/api/timer123', { 'method': 'GET' });
         const data = await response.json();
-        document.getElementById('timer').textContent = data.time;
+        console.dir(data)
+        console.dir(response)
+        document.getElementById("display2").textContent = data.user.time;
     }, 1000);
 }
+
+//load the timer from server.py
+fetch('/api/timer123/start', {
+    'method': 'POST',
+    'headers': { 'Content-Type': 'application/json' },
+    'body': ''
+})
 
 pollTimer();
 
 // Load the table data as soon as the page opens (will likely show "No records loaded" 
 // until the user clicks the REFRESH button to load server memory).
-//loadTableData();
+//loadTableData(bInit = true);
 
 console.log("\nbefore io in app.js ");

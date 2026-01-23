@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple DB Example</title>
+    <title>Example Bank Transaction</title>
     <style>
         body {
             font-family: sans-serif;
@@ -34,17 +34,113 @@
             cursor: pointer;
         }
 
-        /* Separate style for the Refresh button for clarity */
-        #refreshButtonEl {
+        /* Separate style for the Refresh button for clarity 
+        #refreshForm {
+            background: #007bff;
+        }
+        */
+
+        #refreshForm {
+            display: flex;
+            /* Enables Flexbox */
+            justify-content: center;
+            /* Aligns horizontally to center */
+            align-items: center;
+            /* Aligns vertically if needed */
+            width: 100%;
+            /* Form takes full width of screen */
+            margin-top: 20px;
+            /* Optional: adds space above */
             background: #007bff;
         }
 
-        /* Container to allow horizontal scrolling if table is too wide */
+
+
+
+        #refreshButton1 {
+            width: 30%;
+            padding: 12px;
+            background-color: green;
+            /* Original Blue */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            /* Makes changes smooth */
+            box-shadow: 0 4px yellowgreen;
+            /* "3D" bottom shadow */
+        }
+
+        /* When the mouse hovers over it */
+        #refreshButton1:hover {
+            background-color: yellowgreen;
+        }
+
+        /* The "CLICK" effect */
+        #refreshButton1:active {
+            background-color: green;
+            box-shadow: 0 2px grey;
+            /* Shadow gets smaller */
+            transform: translateY(2px);
+            /* Button moves down slightly */
+        }
+
+        #refreshButton1 {
+            width: 30%;
+            /* 30% of the screen width */
+            padding: 10px;
+            /* Makes the button thicker/nicer */
+            cursor: pointer;
+        }
+
+
+        #buttonSubmit {
+            width: 30%;
+            padding: 12px;
+            background-color: green;
+            /* Original Blue */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            /* Makes changes smooth */
+            box-shadow: 0 4px yellowgreen;
+            /* "3D" bottom shadow */
+        }
+
+        /* When the mouse hovers over it */
+        #buttonSubmit:hover {
+            background-color: yellowgreen;
+        }
+
+        /* The "CLICK" effect */
+        #buttonSubmit:active {
+            background-color: green;
+            box-shadow: 0 2px grey;
+            /* Shadow gets smaller */
+            transform: translateY(2px);
+            /* Button moves down slightly */
+        }
+
+        #buttonSubmit {
+            width: 30%;
+            /* 30% of the screen width */
+            padding: 10px;
+            /* Makes the button thicker/nicer */
+            cursor: pointer;
+        }
+
+
+        /* Container to allow horizontal scrolling if table is too wide 
         .table-container {
             width: 100%;
             overflow-x: auto;
             margin-top: 20px;
-        }
+        } */
 
         table {
             width: 100%;
@@ -108,7 +204,7 @@
         }
 
         button {
-            width: 100%;
+            width: 10%;
             margin-bottom: 10px;
             padding: 8px 15px;
             cursor: pointer;
@@ -119,10 +215,10 @@
 
 <body>
 
-    <h1>Student Registration</h1>
+    <h1>Bank Transaction</h1>
 
     <form id="studentForm">
-        <h3>Add New Student</h3>
+        <h3>Add New Transaction</h3>
         <input type="text" id="BankTransaction" placeholder="Bank Transaction" required>
         <input type="text" id="Code" placeholder="Code" required>
         <input type="text" id="BankName" placeholder="Bank Name" required>
@@ -131,7 +227,7 @@
         <input type="text" id="ContactNo" placeholder="Contact No" required>
         <input type="text" id="Currency" placeholder="Currency" required>
         <input type="text" id="Status" placeholder="Status" required>
-        <button type="submit">Save to Database</button>
+        <button type="submit" id="buttonSubmit">Save to Database</button>
 
     </form>
 

@@ -7,6 +7,8 @@ from threading import Thread, Lock
 from flask import Flask, request, jsonify, send_from_directory, render_template
 from flask_cors import CORS
 
+import time 
+
 app = Flask(__name__)
 CORS(app) # This handles the "Locked Door" (CORS) issue
 
@@ -30,7 +32,7 @@ headers = {
 }
 
 #setup of timer
-timer_data = {'time': 0, 'running': False}
+timer_data = {'time': 'None', 'running': False}
 timer_lock = Lock()
 
 
@@ -84,6 +86,8 @@ def save_to_json(): #2
 # ROUTE 1: Serves your Frontend
 @app.route("/")
 def index():#2
+    #initial mainData
+    fGetJson()
     return render_template("index.html")    
 #2
 
@@ -95,8 +99,7 @@ def fBankTransaction(): #2
         
     try: #3
         global mainData
-        fGetJson()
-
+        
         return jsonify({"status": "success", "user": mainData}), 201
             
     except Exception as e: #3
@@ -158,26 +161,59 @@ def fBankTransactionPost(): #2
     #3   
 #2
 
+@app.route('/kabisoteako/me', methods = ['GET'])
+def fRefreshTable():#2
+    global mainData
+    return jsonify({"status": "success", "user": mainData}), 201
+#2
 
+#thread library use this function to process
 def run_timer():
+    global timer_data
+    global timer_lock
     while True:
         with timer_lock:
+            #print(f"\ndebug run_timer {timer_data=}")
             if timer_data['running']:
-                timer_data['time'] += 1
+                vTime = datetime.now()
+                timer_data['time'] = vTime.strftime("%Y/%m/%d = %H:%M:%S")
+                #print(f"\ndebug run_timer {timer_data=}")
         time.sleep(1)
 
+@app.route('/api/timer123/start', methods=['POST'])
+def start_timer():
+    global timer_data
+    with timer_lock:
+        timer_data['running'] = True
+        
+        print(f"\ndebug start_timer {timer_data=}")
 
-def run_timer():
-    while True:
-        with timer_lock:
-            if timer_data['running']:
-                timer_data['time'] += 1
-        time.sleep(1)
+    return jsonify({'status': 'started'}), 201
+
+#the route value is the address use
+#this is use every time the timer updates, client get time here
+@app.route('/api/timer123', methods=['GET'])
+def get_timer():
+    global timer_data
+    global timer_lock
+    print(f"\ndebug get_timer {timer_data=}")
+    with timer_lock:
+        return jsonify({"status": "ok", "user": timer_data}),200
+
+
+@app.route('/api/timer123/stop', methods=['POST'])
+def stop_timer():
+    global timer_data
+    global timer_lock
+    with timer_lock:
+        timer_data['running'] = False
+    return jsonify({'status': 'stopped'}), 201
 
 
 # Start background thread
 timer_thread = Thread(target=run_timer, daemon=True)
 timer_thread.start()
+
 
 if __name__ == "__main__": #3
     print(f"\n\n##################\ndebug RSM program is starting")
