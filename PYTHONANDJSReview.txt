@@ -1676,7 +1676,93 @@ so you can use all the cool JavaScript array methods on it immediately.
 
 
 
+###  DAY MONTH YEAR HOUR MINUTE SECOND   FORMAT
+const d = new Date();
+const f = new Intl.DateTimeFormat('en', {
+  year: 'numeric', month: '2-digit', day: '2-digit',
+  hour: '2-digit', minute: '2-digit', second: '2-digit',
+  hour12: false
+});
 
+const [{ value: month },,{ value: day },,{ value: year },,{ value: hour },,{ value: minute },,{ value: second }] = f.formatToParts(d);
+
+const customFormat = `${day}-${month}-${year} ${hour}:${minute}:${second}`;
+
+console.log(`Custom Format: ${customFormat}`);
+
+/** * // OUTPUT / RESULT:
+ * Custom Format: 26-02-2026 00:34:40
+ */
+
+
+
+###  SKIPPING VALUES	
+
+1. Destructuring (Skipping Values)
+This is likely why you saw it in the Intl.DateTimeFormat example earlier. Since formatToParts() returns an array containing 
+both the data (numbers) and the literal characters (like slashes or spaces), we use double commas to skip the slashes and only 
+grab the numbers.
+
+const colors = ["Red", "Green", "Blue", "Yellow"];
+
+// We want the 1st and 3rd item. 
+// We use a double comma to skip the 2nd item ("Green").
+const [first, , third] = colors;
+
+console.log(`First: ${first}`);
+console.log(`Third: ${third}`);
+
+/** * // OUTPUT / RESULT:
+ * First: Red
+ * Third: Blue
+ */
+
+
+##  SPARSE ARRAYS
+2. Creating Sparse Arrays
+You can also use double commas when defining an array to create "empty holes."
+
+// This array has a length of 3, but only index 0 and 2 have values.
+const sparseArray = ["Apple", , "Cherry"];
+
+console.log("Array Length:", sparseArray.length);
+console.log("Index 0:", sparseArray[0]);
+console.log("Index 1 (The Hole):", sparseArray[1]);
+
+/** * // OUTPUT / RESULT:
+ * Array Length: 3
+ * Index 0: Apple
+ * Index 1 (The Hole): undefined
+ */
+
+###  DOUBLE COMMA
+3. Why the "Double Comma" happens
+When you see [item1, , item2], the logic is:
+
+item1 matches index 0.
+
+The first comma ends index 0.
+
+The space between the commas represents index 1 (which is skipped).
+
+The second comma ends index 1.
+
+item2 matches index 2.
+
+
+###  REMEMBER IN  LOGICAL 
+always read the left part before the next part ex:
+if (!(inputDate instanceof Date) || isNaN(inputDate.getTime()))
+
+if inputDate is 'invalid date'
+it will read first the instanceof Date 
+next will be isNaN( ..getTime() )
+that's why it will not crash
+
+
+
+
+#############################################
 #############################################33
 ### STANDBY
 let inputDate = "2026-12-25T15:30:00";
