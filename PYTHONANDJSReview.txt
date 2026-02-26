@@ -1772,7 +1772,7 @@ next will be isNaN( ..getTime() )
 that's why it will not crash
 
 
-###  MATH.FLOOR GET DIFFERENCE OF DAYS
+###  MATH.FLOOR GET DIFFERENCE OF DAYS  COMPUTATION OF MILLISECONDS IN DAYS
 
     const startDate = "01/02/2025 08:00:00"; // Jan 2
     const endDate = "01/15/2025 20:30:00"; // Jan 15
@@ -1985,49 +1985,53 @@ FINAL result is January 2, 2025 at 12:00:00 AM
 
 
 ###  NUMBER DATETIME FORMAT THEN ADD IT TO INPUTDATE
+    
+    //inputdate is military time	
+    let inputDate = new Date('2/5/2026 10:15:00');
 
-const fConvertStringDate = (inputDate) => {
-    if (!(inputDate instanceof Date) || isNaN(inputDate.getTime())) {
-        return false;
-    }
-    const options = {
-        year: 'numeric', day: '2-digit', month: '2-digit',
-        hour: '2-digit', minute: '2-digit', second: '2-digit',
-        hour12: false
-    }
-    return inputDate.toLocaleString('en-US', options).replace(',', '');
-};
+    console.log(`start inputDate ${inputDate.toString()}`);
+
+    let inputDays = 5;
+    // 86400000 milliseconds is equal to 1 day	
+    let totalDays = 86400000 * inputDays;
+    
+    //now all date is converted to numbers
+    resultOfDays = inputDate.getTime() + totalDays;
+
+    //this number will be assign to inputDate and is converted to new Date 
+    inputDate = new Date(resultOfDays);
+    console.log(`result inputDate ${inputDate.toString()}`);
+
+    output:
+    start inputDate Thu Feb 05 2026 10:15:00 GMT+0800 (Philippine Standard Time)
+    result inputDate Tue Feb 10 2026 10:15:00 GMT+0800 (Philippine Standard Time)
 
 
-function fMain() {
 
-    //with Z at the end of string is UTC MODE
-    newDate = new Date('1970-01-01T00:00:00Z');
+###  SETTIME   DATETIME FORMAT THEN ADD IT TO INPUTDATE
+    
+    //inputdate is military time
+    inputDate = new Date('5/5/2026 21:00:00');
 
-    console.log(`your input newDate ${newDate.toISOString()}`);
-    inputDays = 10;
-    getMilliSecond = newDate.getTime();
+    console.log(`\n\n\ninitial inputDate ${inputDate.toString()}`);
 
-    console.log(`getMilliSecond ${getMilliSecond}`);
+    inputDays = 5;
+    let totalMs = 86400000 * inputDays;
 
-    //86400000 this is the for days in milliseconds
-    //86400000 milliseconds = 1 day convertion
-    totalDays = 86400000 * inputDays;
+    // You must add to the TIME (milliseconds), not the object itself
+    inputDate.setTime(inputDate.getTime() + totalMs);
 
-    resultNewDate = new Date(totalDays);
+    console.log(`setTime to inputDate: ${inputDate.toString()}`);
 
-    resultConverted = fConvertStringDate(resultNewDate);
+    /*
+    --- CONSOLE OUTPUT ---
+    initial inputDate Tue May 05 2026 21:00:00 GMT+0800 (Philippine Standard Time)
+    setTime to inputDate: Sun May 10 2026 21:00:00 GMT+0800 (Philippine Standard Time) 
+    */
+    
 
-    console.log(`resultConverted ${resultConverted}`);
 
-    //get it back to new Date
-    backResultConverted = new Date(resultConverted);
 
-    console.log(`backResultConverted ${backResultConverted.toString()}`);
-    console.log(`backResultConverted in ISO ${backResultConverted.toISOString()}`);
-}
-
-fMain()
 
 
 # END JS
