@@ -1760,6 +1760,116 @@ next will be isNaN( ..getTime() )
 that's why it will not crash
 
 
+###  MATH.FLOOR GET DIFFERENCE OF DAYS
+
+    const startDate = "01/02/2025 08:00:00"; // Jan 2
+    const endDate = "01/15/2025 20:30:00"; // Jan 15
+
+    const getDaysDiff = (start, end) => {
+        const d1 = new Date(start);
+        const d2 = new Date(end);
+
+        // Get the difference in milliseconds
+        const diffInMs = d2 - d1;
+
+        // Milliseconds in one day: 1000 * 60 * 60 * 24
+        const msInDay = 86400000;
+
+        // Use Math.floor to get only the completed days
+        const diffInDays = Math.floor(diffInMs / msInDay);
+
+        return diffInDays;
+    };
+
+    const totalDays = getDaysDiff(startDate, endDate);
+
+    console.log(`Start Date: ${startDate}`);
+    console.log(`End Date:   ${endDate}`);
+    console.log(`Difference in Full Days: ${totalDays}`);
+
+    /*
+    --- CONSOLE OUTPUT ---
+    Start Date: 01/02/2025 08:00:00
+    End Date:   01/15/2025 20:30:00
+    Difference in Full Days: 13
+    */
+
+
+### MATH.FLOOR  GET DIFFERENCE IN MINUTES 
+
+    const timeStart = "01/02/2025 00:10:20"; // 12:10 AM
+    const timeEnd = "01/02/2025 00:45:50";   // 12:45 AM
+
+    const getMinutesDiff = (startStr, endStr) => {
+        // 1. Convert strings back to real Date Objects
+        const date1 = new Date(startStr);
+        const date2 = new Date(endStr);
+
+        // 2. Subtract to get milliseconds
+        const diffInMs = date2 - date1;
+
+        // 3. Convert ms to minutes (1 min = 60,000 ms)
+        // We use Math.floor to get a clean whole number
+        const diffInMins = Math.floor(diffInMs / 60000);
+
+        return diffInMins;
+    };
+
+    const result = getMinutesDiff(timeStart, timeEnd);
+
+    console.log(`Start: ${timeStart}`);
+    console.log(`End:   ${timeEnd}`);
+    console.log(`Difference in minutes: ${result}`);
+
+    /*
+    --- CONSOLE OUTPUT ---
+    Start: 01/02/2025 00:10:20
+    End:   01/02/2025 00:45:50
+    Difference in minutes: 35
+    */
+
+
+###  DIFFERENCE OF YEARS DAYS MONTHS HOURS MINUTES 
+    const startDate = new Date("2024-01-01T00:00:00"); // Start of last year
+    const endDate = new Date("2026-02-26T12:48:54");   // Right now
+
+    function getDetailedDiff(start, end) {
+        let years = end.getFullYear() - start.getFullYear();
+        let months = end.getMonth() - start.getMonth();
+        let days = end.getDate() - start.getDate();
+        let hours = end.getHours() - start.getHours();
+        let minutes = end.getMinutes() - start.getMinutes();
+        let seconds = end.getSeconds() - start.getSeconds();
+
+        // Handle "negative" overflows (e.g., if end day is 5 and start day is 20)
+        if (seconds < 0) { minutes--; seconds += 60; }
+        if (minutes < 0) { hours--; minutes += 60; }
+        if (hours < 0) { days--; hours += 24; }
+        if (days < 0) {
+            months--;
+            // Get days in the previous month
+            const prevMonth = new Date(end.getFullYear(), end.getMonth(), 0).getDate();
+            days += prevMonth;
+        }
+        if (months < 0) { years--; months += 12; }
+
+        return { years, months, days, hours, minutes, seconds };
+    }
+
+    const diff = getDetailedDiff(startDate, endDate);
+
+    console.log(`Difference: ${diff.years} Years, ${diff.months} Months, ${diff.days} Days`);
+    console.log(`Time: ${diff.hours}h ${diff.minutes}m ${diff.seconds}s`);
+
+    /*
+    --- CONSOLE OUTPUT ---
+    Difference: 2 Years, 1 Months, 25 Days
+    Time: 12h 48m 54s
+    */
+ 
+
+
+
 
 
 #############################################
